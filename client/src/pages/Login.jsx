@@ -15,26 +15,47 @@ import {
     TabsList,
     TabsTrigger,
 } from "../components/ui/tabs"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { useLoginUserMutation, useRegisterUserMutation } from "@/features/api/authApi"
+import { Loader2 } from "lucide-react"
+import { toast } from "sonner"
 
 function Login() {
-    const [signupData, setSignupData] = useState({ name: "", email: "", password: "" });
-    const [loginData, setLoginData] = useState({ email: "", password: "" });
+    const [signupInput, setSignupInput] = useState({ name: "", email: "", password: "" });
+    const [loginInput, setLoginInput] = useState({ email: "", password: "" });
+    const [registerUser, { data: registerData, error: registerError, isLoading: registerIsLoading, isSuccess: registerIsSucess }] = useRegisterUserMutation();
+    const [loginUser, { data: loginData, error: loginError, isLoading: loginIsLoading, isSuccess: loginIsSucess }] = useLoginUserMutation();
 
     const inputHandler = (e, type) => {
         const { name, value } = e.target;
         if (type === "signup") {
-            setSignupData({ ...signupData, [name]: value })
+            setSignupInput({ ...signupInput, [name]: value })
         }
         else {
-            setLoginData({ ...loginData, [name]: value })
+            setLoginInput({ ...loginInput, [name]: value })
         }
     }
 
-    const handleFormSubmit = (type) => {
-        const inputData = type === "signup" ? signupData : loginData;
-        console.log(inputData)
+    const handleFormSubmit = async (type) => {
+        const inputData = type === "signup" ? signupInput : loginInput;
+        const action = type === "signup" ? registerUser : loginUser;
+        await action(inputData);
     }
+
+    useEffect(() => {
+        if (registerIsSucess && registerData) {
+            toast.success(registerData.message || "Signup successful.")
+        }
+        if (registerError) {
+            toast.error(registerError.data.message || "Signup Failed");
+        }
+        if (loginIsSucess && loginData) {
+            toast.success(loginData.message || "Login successful.")
+        }
+        if (loginError) {
+            toast.error(loginError.data.message || "login Failed");
+        }
+    }, [loginIsLoading.registerIsLoading, loginData, registerData, loginError, registerError])
 
     return (
         <div className="flex items-center w-full justify-center">
@@ -58,7 +79,7 @@ function Login() {
                                 <Label>Name</Label>
                                 <Input type="text"
                                     name="name"
-                                    value={signupData.name}
+                                    value={signupInput.name}
                                     onChange={(e) => inputHandler(e, "signup")}
                                     placeholder="Enter Your Name"
                                     required />
@@ -67,7 +88,7 @@ function Login() {
                                 <Label>Email</Label>
                                 <Input type="email"
                                     name="email"
-                                    value={signupData.email}
+                                    value={signupInput.email}
                                     onChange={(e) => inputHandler(e, "signup")}
                                     placeholder="abc@gmail.com"
                                     required />
@@ -77,14 +98,22 @@ function Login() {
                                 <Input
                                     type="password"
                                     name="password"
-                                    value={signupData.password}
+                                    value={signupInput.password}
                                     onChange={(e) => inputHandler(e, "signup")}
                                     placeholder="Enter your Password"
                                     required />
                             </div>
                         </CardContent>
                         <CardFooter>
-                            <Button onClick={() => handleFormSubmit("signup")}>Signup</Button>
+                            <Button disabled={registerIsLoading} onClick={() => handleFormSubmit("signup")}>
+                                {
+                                    registerIsLoading ? (
+                                        <>
+                                            <Loader2 className="mr-2 w-4 h-4 animate-spin"></Loader2>
+                                        </>
+                                    ) : "Signup"
+                                }
+                            </Button>
                         </CardFooter>
                     </Card>
                 </TabsContent>
@@ -103,7 +132,7 @@ function Login() {
                                 <Label  >Email</Label>
                                 <Input type="email"
                                     name="email"
-                                    value={loginData.email}
+                                    value={loginInput.email}
                                     onChange={(e) => inputHandler(e, "login")}
                                     placeholder="abc@gmail.com"
                                     required />
@@ -112,14 +141,22 @@ function Login() {
                                 <Label  >Password</Label>
                                 <Input type="password"
                                     name="password"
-                                    value={loginData.password}
+                                    value={loginInput.password}
                                     onChange={(e) => inputHandler(e, "login")}
                                     placeholder="Enter your Password"
                                     required />
                             </div>
                         </CardContent>
                         <CardFooter>
-                            <Button onClick={() => handleFormSubmit("login")}>Login</Button>
+                            <Button disabled={loginIsLoading} onClick={() => handleFormSubmit("login")}>
+                                {
+                                    loginIsLoading ? (
+                                        <>
+                                            <Loader2 className="mr-2 w-4 h-4 animate-spin"></Loader2>
+                                        </>
+                                    ) : "Login"
+                                }
+                            </Button>
                         </CardFooter>
                     </Card>
                 </TabsContent>
