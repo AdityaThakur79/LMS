@@ -9,6 +9,7 @@ const mainLayout = () => {
             <div>
                 <Outlet></Outlet>
             </div>
+            {/* footer */}
         </div>
     )
 }

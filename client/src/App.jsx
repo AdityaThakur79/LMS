@@ -1,8 +1,9 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import './App.css'
 import Login from './pages/login.jsx'
-import Herosection from './pages/student/Herosection.jsx'
 import MainLayout from './layout/MainLayout.jsx'
+import Herosection from './pages/student/Herosection.jsx'
+import Courses from './pages/student/Courses.jsx'
 
 const appRouter = createBrowserRouter([{
   path: "/",
@@ -13,7 +14,7 @@ const appRouter = createBrowserRouter([{
       element:
         <>
           <Herosection />
-          {/* Courses */}
+          <Courses />
         </>
     },
     {
