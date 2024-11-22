@@ -27,6 +27,7 @@ import {
 } from "./ui/sheet";
 // import { Link } from 'react-router-dom'
 import { Separator } from '@radix-ui/react-dropdown-menu'
+import { Link } from 'react-router-dom'
 
 const Navbar = () => {
     const user = true;
@@ -36,10 +37,11 @@ const Navbar = () => {
             {/* desktop */}
             <div className='md:flex max-w-7xl mx-auto hidden justify-between gap-10 h-full'>
                 {/* Logo */}
-                <div className='flex gap-2 items-center'>
-                    <School size={"30"} />
-                    <h1 className='hidden md:block font-extrabold text-2xl'>E-Learning</h1>
-                </div>
+                <Link to="/">
+                    <div className='flex gap-2 items-center mt-3'>
+                        <School size={"30"} />
+                        <h1 className='hidden md:block font-extrabold text-2xl'>E-Learning</h1>
+                    </div></Link>
 
                 {/* User and DarkMode*/}
                 <div className='flex items-center gap-8'>
@@ -55,13 +57,13 @@ const Navbar = () => {
                             <DropdownMenuSeparator />
                             <DropdownMenuGroup>
                                 <DropdownMenuItem>
-                                    <span>My Learning</span>
+                                    <Link to="mylearning">My Learning</Link>
                                 </DropdownMenuItem>
                                 <DropdownMenuItem>
-                                    <span>Edit Profile</span>
+                                    <Link to="profile">Edit Profile</Link>
                                 </DropdownMenuItem>
                                 <DropdownMenuItem>
-                                    <span>Dashboard</span>
+                                    <Link to="dashboard">Dashboard</Link>
                                 </DropdownMenuItem>
                             </DropdownMenuGroup>
                             <DropdownMenuSeparator />
