@@ -1,18 +1,35 @@
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import './App.css'
-import Navbar from './components/Navbar'
-import { Button } from './components/ui/button'
-import Login from './pages/login'
-import Herosection from './pages/student/Herosection'
+import Login from './pages/login.jsx'
+import Herosection from './pages/student/Herosection.jsx'
+import MainLayout from './layout/MainLayout.jsx'
 
+const appRouter = createBrowserRouter([{
+  path: "/",
+  element: <MainLayout />,
+  children: [
+    {
+      path: "/",
+      element:
+        <>
+          <Herosection />
+          {/* Courses */}
+        </>
+    },
+    {
+      path: "login",
+      element: <Login />
+    }
+  ]
+}])
 
 function App() {
-  return (
-    <>
-      <Navbar />
-      <Herosection />
-      <Login />
 
-    </>
+  return (
+
+    <main>
+      <RouterProvider router={appRouter} />
+    </main>
   )
 }
 
