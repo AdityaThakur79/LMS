@@ -1,5 +1,5 @@
 import { LogOut, Menu, School } from 'lucide-react'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Button } from "../components/ui/button"
 import {
     Avatar,
@@ -27,10 +27,27 @@ import {
 } from "./ui/sheet";
 // import { Link } from 'react-router-dom'
 import { Separator } from '@radix-ui/react-dropdown-menu'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useLoadUserQuery, useLogoutUserMutation } from '@/features/api/authApi'
+import { toast } from 'sonner'
+import { useSelector } from 'react-redux'
 
 const Navbar = () => {
-    const user = true;
+
+    const { user } = useSelector(store => store.auth)
+    const [logoutUser, { data, isLoading, isSuccess }] = useLogoutUserMutation();
+    const navigate = useNavigate();
+
+    const logoutHandler = async () => {
+        await logoutUser();
+    }
+    useEffect(() => {
+        if (isSuccess) {
+            toast.success(data.message || "User Logged Out")
+            navigate("/login")
+        }
+    }, [isSuccess])
+
 
     return (
         <div className="h-16 dark:bg-[#020817] bg-white border-b dark:border-b-gray-800 border-b-gray-200 fixed top-0 left-0 right-0 duration-300 z-10">
@@ -48,7 +65,7 @@ const Navbar = () => {
                     {user ? (<DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Avatar>
-                                <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+                                <AvatarImage src={user?.photoUrl} alt="@shadcn" />
                                 <AvatarFallback>CN</AvatarFallback>
                             </Avatar>
                         </DropdownMenuTrigger>
@@ -67,15 +84,16 @@ const Navbar = () => {
                                 </DropdownMenuItem>
                             </DropdownMenuGroup>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem>
+                            <DropdownMenuItem onClick={logoutHandler}  >
                                 <LogOut />
                                 <span>Log out</span>
+
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>) :
                         <div className='flex gap-2 items-center'>
-                            <Button variant="outline">Login</Button>
-                            <Button>Signup</Button>
+                            <Link to="/login"><Button variant="outline">Login</Button></Link>
+                            <Link to="/login"> <Button>Signup</Button></Link>
                         </div>
                     }
                     <DarkMode />
