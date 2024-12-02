@@ -39,7 +39,7 @@ const CourseTable = () => {
               <TableCell  >{course.courseTitle}</TableCell>
               <TableCell><Badge> {course?.isPublished ? "Published" : "Draft"}</Badge></TableCell>
               <TableCell>{course?.coursePrice || "NA"}</TableCell>
-              <TableCell><Button size="sm" variant="ghost"><Edit /></Button></TableCell>
+              <TableCell><Button size="sm" variant="ghost" onClick={() => navigate(`${course._id}`)}><Edit /></Button></TableCell>
             </TableRow>
           ))}
         </TableBody>
