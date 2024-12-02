@@ -23,9 +23,7 @@ const AddCourse = () => {
     const [createCourse, { data, isLoading, error, isSuccess }] = useCreateCourseMutation();
 
     const createCourseHandler = async () => {
-
         await createCourse({ courseTitle, category });
-
     }
 
     useEffect(() => {

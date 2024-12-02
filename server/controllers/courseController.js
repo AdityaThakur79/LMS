@@ -25,12 +25,19 @@ export const createCourseController = async (req, res) => {
   }
 };
 
-export const getAllAdminCourses = async (req, res) => {
+export const getCreatorCourses = async (req, res) => {
   try {
     const userId = req.id;
+    const courses = await Course.find({ creator: userId });
+    if (!courses) {
+      return res.status(404).send({ message: "Courses not Found" });
+    }
+    return res
+      .status(200)
+      .send({ success: true, message: "Courses Fetched", courses });
   } catch (error) {
     console.log(error);
-    res
+    return res
       .status(500)
       .send({ message: "Something Went wrong while Fetching course", error });
   }
