@@ -79,9 +79,13 @@ const Navbar = () => {
                                 <DropdownMenuItem>
                                     <Link to="profile">Edit Profile</Link>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem>
-                                    <Link to="dashboard">Dashboard</Link>
-                                </DropdownMenuItem>
+                                {
+                                    user.role == "instructor" && (
+                                        <DropdownMenuItem>
+                                            <Link to="/admin/dashboard">Dashboard</Link>
+                                        </DropdownMenuItem>
+                                    )}
+
                             </DropdownMenuGroup>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem onClick={logoutHandler}  >
@@ -114,6 +118,7 @@ const Navbar = () => {
 export default Navbar
 
 const MobileNavbar = () => {
+    // const { user } = useSelector(store => store.auth)
     const role = "instructor";
     return (
         <Sheet>
