@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -18,14 +18,16 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import RichTextEditor from '@/components/RichTextEditor.jsx';
 import { Loader2 } from 'lucide-react';
+import { useUpdateCourseMutation } from '@/features/api/courseApi';
+import { toast } from 'sonner';
 
 const CourseTab = () => {
     const navigate = useNavigate();
     const isPublished = false;
-    const isLoading = false;
+
     const [input, setInput] = useState({
         courseTitle: "",
         subTitle: "",
@@ -36,7 +38,10 @@ const CourseTab = () => {
         courseThumbnail: "",
     });
     const [previewThumbnail, setPreviewThumbnail] = useState("");
+    const [updateCourse, data, isLoading, isSuccess, error] = useUpdateCourseMutation();
 
+    const params = useParams();
+    const courseId = params.courseId;
     const changeEventHandler = (e) => {
         const { name, value } = e.target;
         setInput({ ...input, [name]: value });
@@ -59,9 +64,28 @@ const CourseTab = () => {
         }
     }
 
-    const updateCourseHandler = () => {
-        console.log(input)
+    const updateCourseHandler = async () => {
+        const formData = new FormData();
+        formData.append("courseTitle", input.courseTitle);
+        formData.append("subTitle", input.subTitle);
+        formData.append("description", input.description);
+        formData.append("category", input.category);
+        formData.append("courseLevel", input.courseLevel);
+        formData.append("coursePrice", input.coursePrice);
+        formData.append("courseThumbnail", input.courseThumbnail);
+
+        await updateCourse({ formData, courseId })
     }
+
+    useEffect(() => {
+        if (isSuccess) {
+            toast.success(data.message || "Course Updated")
+        }
+        if (error) {
+            toast.error(data.message || "Failed Updating Course")
+        }
+    }, [isSuccess, error])
+
     return (
         <Card>
             <CardHeader className="flex flex-row justify-between">
