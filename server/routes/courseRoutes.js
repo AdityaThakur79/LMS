@@ -1,6 +1,7 @@
 import express from "express";
 import {
   createCourseController,
+  getCourseById,
   getCreatorCourses,
   updateCourseController,
 } from "../controllers/courseController.js";
@@ -15,6 +16,12 @@ router.put(
   isAuthenticated,
   upload.single("courseThumbnail"),
   updateCourseController
+);
+router.get(
+  "/:courseId",
+  isAuthenticated,
+  upload.single("courseThumbnail"),
+  getCourseById
 );
 
 export default router;

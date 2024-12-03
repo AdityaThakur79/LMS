@@ -21,10 +21,14 @@ import {
 import { useNavigate, useParams } from 'react-router-dom';
 import RichTextEditor from '@/components/RichTextEditor.jsx';
 import { Loader2 } from 'lucide-react';
-import { useUpdateCourseMutation } from '@/features/api/courseApi';
+import { useGetCourseByIdQuery, useUpdateCourseMutation } from '@/features/api/courseApi';
 import { toast } from 'sonner';
 
 const CourseTab = () => {
+
+    const params = useParams();
+    const courseId = params.courseId;
+
     const navigate = useNavigate();
     const isPublished = false;
 
@@ -37,23 +41,46 @@ const CourseTab = () => {
         coursePrice: "",
         courseThumbnail: "",
     });
+
     const [previewThumbnail, setPreviewThumbnail] = useState("");
     const [updateCourse, data, isLoading, isSuccess, error] = useUpdateCourseMutation();
+    const { data: courseByIdData, isLoading: courseByIdLoading } = useGetCourseByIdQuery(courseId)
 
-    const params = useParams();
-    const courseId = params.courseId;
+    //Fetching Course Information By Id
+    useEffect(() => {
+        if (courseByIdData?.course) {
+            const course = courseByIdData.course;
+            setInput({
+                courseTitle: course.courseTitle,
+                subTitle: course.subTitle,
+                description: course.description,
+                category: course.category,
+                courseLevel: course.courseLevel,
+                coursePrice: course.coursePrice,
+                courseThumbnail: course.courseThumbnail,
+            });
+            toast.success("Course Details Fetched")
+            setPreviewThumbnail(course.courseThumbnail);
+        }
+    }, [courseByIdData])
+
+    //On change handler
     const changeEventHandler = (e) => {
         const { name, value } = e.target;
         setInput({ ...input, [name]: value });
     };
 
+    //Capturing selected courseCategory
     const selectCategory = (value) => {
         setInput({ ...input, category: value });
     };
+
+    //Capturing selected courseLevel
     const selectCourseLevel = (value) => {
         setInput({ ...input, courseLevel: value });
     };
 
+    //Capturing thumbnail
     const selectThumbnail = (e) => {
         const file = e.target.files?.[0];
         if (file) {
@@ -64,6 +91,7 @@ const CourseTab = () => {
         }
     }
 
+    //Handling Update request
     const updateCourseHandler = async () => {
         const formData = new FormData();
         formData.append("courseTitle", input.courseTitle);
@@ -77,14 +105,15 @@ const CourseTab = () => {
         await updateCourse({ formData, courseId })
     }
 
+    //Update Handler Toast
     useEffect(() => {
         if (isSuccess) {
-            toast.success(data.message || "Course Updated")
+            toast.success(data.message || "Course update.");
         }
         if (error) {
-            toast.error(data.message || "Failed Updating Course")
+            toast.error(error.data.message || "Failed to update course");
         }
-    }, [isSuccess, error])
+    }, [isSuccess, error]);
 
     return (
         <Card>
@@ -132,7 +161,7 @@ const CourseTab = () => {
                         <div>
                             <Label>Category</Label>
                             <Select
-                                defaultValue={input.category}
+                                value={input.category}
                                 onValueChange={selectCategory}
                             >
                                 <SelectTrigger className="w-[180px]">
@@ -164,7 +193,7 @@ const CourseTab = () => {
                         <div>
                             <Label>Course Level</Label>
                             <Select
-                                defaultValue={input.courseLevel}
+                                value={input.courseLevel}
                                 onValueChange={selectCourseLevel}
                             >
                                 <SelectTrigger className="w-[180px]">

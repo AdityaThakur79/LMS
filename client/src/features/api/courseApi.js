@@ -8,7 +8,7 @@ export const courseApi = createApi({
     baseUrl: COURSE_API,
     credentials: "include",
   }),
-  
+
   endpoints: (builder) => ({
     createCourse: builder.mutation({
       query: ({ courseTitle, category }) => ({
@@ -35,6 +35,13 @@ export const courseApi = createApi({
       }),
       invalidatesTags: ["Refetch_Creator_Course"],
     }),
+    getCourseById: builder.query({
+      query: (courseId) => ({
+        url: `/${courseId}`,
+        method: "GET",
+      }),
+      providesTags: ["Refetch_Creator_Course"],
+    }),
   }),
 });
 
@@ -42,4 +49,5 @@ export const {
   useCreateCourseMutation,
   useGetCreatorCourseQuery,
   useUpdateCourseMutation,
+  useGetCourseByIdQuery,
 } = courseApi;
