@@ -4,6 +4,7 @@ import cors from "cors";
 import connectDB from "./database/dbConfig.js";
 import userRoutes from "./routes/userRoutes.js";
 import courseRoutes from "./routes/courseRoutes.js";
+import mediaRoutes from "./routes/mediaRoutes.js";
 import cookieParser from "cookie-parser";
 
 // configing the dotenv file
@@ -27,6 +28,7 @@ connectDB();
 //ROUTES
 app.use("/api/user", userRoutes);
 app.use("/api/course", courseRoutes);
+app.use("/api/media", mediaRoutes);
 
 app.use("/", (req, res) => {
   res.send("HI");
