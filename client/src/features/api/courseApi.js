@@ -18,7 +18,12 @@ export const courseApi = createApi({
       }),
       invalidatesTags: ["Refetch_Creator_Course"],
     }),
-
+    getAllPublishedCourses: builder.query({
+      query: () => ({
+        url: "/published-courses",
+        method: "GET",
+      }),
+    }),
     getCreatorCourse: builder.query({
       query: () => ({
         url: "",
@@ -97,6 +102,7 @@ export const courseApi = createApi({
 
 export const {
   useCreateCourseMutation,
+  useGetAllPublishedCoursesQuery,
   useGetCreatorCourseQuery,
   useUpdateCourseMutation,
   useGetCourseByIdQuery,

@@ -1,10 +1,12 @@
 import React from 'react'
 import { Skeleton } from "@/components/ui/skeleton";
 import Course from './Course.jsx';
+import { useGetAllPublishedCoursesQuery } from '@/features/api/courseApi.js';
 
 const Courses = () => {
-    const courses = [1, 2, 3, 4, 5, 6, 7, 8];
-    const isLoading = false;
+
+    const { data, isLoading } = useGetAllPublishedCoursesQuery();
+
     return (
         <div className='bg-gray-50'>
             <div className='max-w-7xl mx-auto p-6'>
@@ -15,7 +17,7 @@ const Courses = () => {
                             < CourseSkeleton key={index} />
                         ))
                     )
-                        : courses.map((course, index) => <Course key={index} />)
+                        : data?.courses && data.courses.map((course, index) => <Course key={index} course={course} />)
 
                     }
                 </div>

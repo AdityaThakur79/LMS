@@ -31,6 +31,28 @@ export const createCourseController = async (req, res) => {
   }
 };
 
+export const getAllPublishedCourses = async (req, res) => {
+  try {
+    const courses = await Course.find({ isPublished: true }).populate({
+      path: "creator",
+      select: "name photoUrl",
+    });
+    if (!courses) {
+      return res.status(404).json({
+        message: "Course not found",
+      });
+    }
+    return res.status(200).json({
+      courses,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Failed to get published courses",
+    });
+  }
+};
+
 export const updateCourseController = async (req, res) => {
   try {
     const courseId = req.params.courseId;
@@ -114,7 +136,7 @@ export const getCourseById = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res
-      .status(200)
+      .status(500)
       .send({ success: false, message: "Error in fetching Course By Id" });
   }
 };

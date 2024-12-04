@@ -2,6 +2,7 @@ import express from "express";
 import {
   createCourseController,
   createLecture,
+  getAllPublishedCourses,
   getCourseById,
   getCourseLectures,
   getCreatorCourses,
@@ -17,7 +18,7 @@ const router = express.Router();
 
 router.post("/", isAuthenticated, createCourseController);
 router.get("/", isAuthenticated, getCreatorCourses);
-
+router.get("/published-courses", getAllPublishedCourses);
 router.put(
   "/:courseId",
   isAuthenticated,
