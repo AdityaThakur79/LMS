@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 
 import React from 'react'
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Course = ({ course }) => {
     return (
@@ -15,6 +15,7 @@ const Course = ({ course }) => {
                         alt="course"
                         className="w-full h-36 object-cover rounded-t-lg"
                     />
+
                 </div>
                 <CardContent className="px-5 py-4 space-y-3">
                     <h1 className="hover:underline font-bold text-lg truncate">

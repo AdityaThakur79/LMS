@@ -11,10 +11,14 @@ import { CheckCircle, CheckCircle2, CirclePlay } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
+import jsPDF from 'jspdf'
+import img from '../../assets/certificate-background.png'
+import { useLoadUserQuery } from "@/features/api/authApi";
 
 const CourseProgress = () => {
     const params = useParams();
     const courseId = params.courseId;
+    const { data:userData } = useLoadUserQuery();
 
     const { data, isLoading, isError, refetch } =
         useGetCourseProgressQuery(courseId);
@@ -69,24 +73,58 @@ const CourseProgress = () => {
         await inCompleteCourse(courseId);
     };
 
+    const generateCertificate = (name, course) => {
+        // Create a new jsPDF instance
+        const doc = new jsPDF();
+
+        // Add background image
+        doc.addImage(img, 'PNG', 0, 0, doc.internal.pageSize.getWidth(), doc.internal.pageSize.getHeight());
+
+        // Add recipient name
+        doc.setFontSize(36);
+        doc.setFont('helvetica'); // Change the font family and style
+        doc.text(name, 105, 160, { align: 'center' }); // put the nick name 
+
+        // Add course name
+        doc.setFontSize(20);
+        doc.text(course, 105, 195, { align: 'center' }); // put the course name
+
+        // Save the PDF
+        doc.save(`${name}-${course}.pdf`);
+    };
+
 
     return (
         <div className="max-w-7xl mx-auto p-4 mt-20">
             {/* Display course name  */}
             <div className="flex justify-between mb-4">
                 <h1 className="text-2xl font-bold">{courseTitle}</h1>
-                <Button
-                    onClick={completed ? handleInCompleteCourse : handleCompleteCourse}
-                    variant={completed ? "outline" : "default"}
-                >
-                    {completed ? (
-                        <div className="flex items-center">
-                            <CheckCircle className="h-4 w-4 mr-2" /> <span>Completed</span>{" "}
-                        </div>
-                    ) : (
-                        "Mark as completed"
-                    )}
-                </Button>
+                <div className="flex">
+
+
+                    <Button
+                        disabled={!completed}
+                        className="mr-4"
+                        onClick={() => generateCertificate(userData?.user.name, courseTitle)}>
+
+                        {completed ? (<><div className="flex items-center">
+                            <span>Download Certificate</span>
+                        </div></>) : "Download Certificate"}
+                    </Button>
+                    <Button
+                        onClick={completed ? handleInCompleteCourse : handleCompleteCourse}
+                        variant={completed ? "outline" : "default"}
+                    >
+                        {completed ? (
+                            <div className="flex items-center">
+                                <CheckCircle className="h-4 w-4 mr-2" /> <span>Completed</span>{" "}
+                            </div>
+                        ) : (
+                            "Mark as completed"
+                        )}
+                    </Button>
+                </div>
+
             </div>
 
             <div className="flex flex-col md:flex-row gap-6">
