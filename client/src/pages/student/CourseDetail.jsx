@@ -20,6 +20,7 @@ const CourseDetail = () => {
     const courseId = params.courseId;
 
     const navigate = useNavigate();
+
     const { data, isLoading, isError } =
         useGetCourseDetailWithPurchaseQuery(courseId);
 
@@ -30,9 +31,9 @@ const CourseDetail = () => {
     console.log(purchased);
 
     const handleContinueCourse = () => {
-        // if (purchased) {
-        //     navigate(`/course-progress/${courseId}`)
-        // }
+        if (purchased) {
+            navigate(`/course-progress/${courseId}`)
+        }
     }
 
     return (

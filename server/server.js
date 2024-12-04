@@ -6,6 +6,7 @@ import userRoutes from "./routes/userRoutes.js";
 import courseRoutes from "./routes/courseRoutes.js";
 import mediaRoutes from "./routes/mediaRoutes.js";
 import purchaseCourseRoutes from "./routes/purchaseCourseRoutes.js";
+import progressCourseRoutes from "./routes/courseProgressRoutes.js";
 import cookieParser from "cookie-parser";
 
 // configing the dotenv file
@@ -31,6 +32,7 @@ app.use("/api/user", userRoutes);
 app.use("/api/course", courseRoutes);
 app.use("/api/media", mediaRoutes);
 app.use("/api/purchase", purchaseCourseRoutes);
+app.use("/api/progress", progressCourseRoutes);
 
 app.use("/", (req, res) => {
   res.send("HI");
