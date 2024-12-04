@@ -6,9 +6,11 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useTheme } from "./ThemeProvider"
 
 
 function DarkMode() {
+    const { setTheme } = useTheme();
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>

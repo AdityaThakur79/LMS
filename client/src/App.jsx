@@ -16,6 +16,9 @@ import EditLecture from './pages/admin/lecture/EditLecture'
 import CourseDetail from './pages/student/CourseDetail'
 import CourseProgress from './pages/student/CourseProgress'
 import SearchPage from './pages/student/SearchPage'
+import { ProtectedRoute, AuthenticatedUser, AdminRoute } from './components/ProtectedRoutes'
+import { ThemeProvider } from './components/ThemeProvider'
+import PurchaseCourseProtectedRoute from './components/PurchaseCourseProtectedRoute '
 
 
 const appRouter = createBrowserRouter([{
@@ -36,34 +39,50 @@ const appRouter = createBrowserRouter([{
     },
     {
       path: "mylearning",
-      element: <MyLearning />
+      element: (
+        <ProtectedRoute>
+          <MyLearning />
+        </ProtectedRoute>
+      )
     },
     {
       path: "profile",
-      element: <Profile />
+      element: (
+        <ProtectedRoute>
+          <Profile />
+        </ProtectedRoute>
+      )
     },
     {
       path: "course/search",
-      element: <SearchPage />
+      element: <ProtectedRoute>
+        <SearchPage />
+      </ProtectedRoute>
     },
-    {
-      path: "profile",
-      element: <Profile />
-    },
+
     {
       path: "course-detail/:courseId",
-      element: <CourseDetail />
+      element: (
+        <ProtectedRoute>
+          <CourseDetail />
+        </ProtectedRoute>
+      )
     },
     {
       path: "course-progress/:courseId",
-      element: <CourseProgress />
+      element: (<ProtectedRoute>
+        <PurchaseCourseProtectedRoute>
+          <CourseProgress />
+        </PurchaseCourseProtectedRoute>
+      </ProtectedRoute>)
     },
 
     {
       path: "admin",
       element: (
-
-        <Sidebar />
+        <AdminRoute>
+          <Sidebar />
+        </AdminRoute>
 
       ),
       children: [
@@ -102,7 +121,9 @@ function App() {
   return (
 
     <main>
-      <RouterProvider router={appRouter} />
+      <ThemeProvider>
+        <RouterProvider router={appRouter} />
+      </ThemeProvider>
     </main>
   )
 }
