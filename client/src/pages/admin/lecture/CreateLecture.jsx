@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useNavigate, useParams } from 'react-router-dom';
-import { Loader2 } from 'lucide-react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { ArrowLeft, Loader2 } from 'lucide-react';
 import { useCreateLectureMutation, useGetCourseLecturesQuery } from '@/features/api/courseApi';
 import { toast } from 'sonner';
 import Lecture from './Lecture';
@@ -33,7 +33,11 @@ const CreateLecture = () => {
         <div className="flex-1 mx-10">
             <div className="mb-4">
                 <h1 className="font-bold text-xl">
-                    Lets add Lectures, add some basic Lecture details for our course
+                    <Link to={`/admin/course/${courseId}`}>
+                        <Button size="icon" variant="outline" className="rounded-full">
+                            <ArrowLeft size={16} />
+                        </Button>
+                    </Link>  Lets add Lectures, add some basic Lecture details for our course
                 </h1>
                 <p className="text-sm">
                     Dive into the world of advanced legal studies with our comprehensive LLM program, designed to enhance your expertise and open doors to specialized legal careers globally.

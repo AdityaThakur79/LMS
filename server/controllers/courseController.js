@@ -255,3 +255,28 @@ export const getLectureById = async (req, res) => {
     });
   }
 };
+
+export const togglePublishCourse = async (req, res) => {
+  try {
+    const { courseId } = req.params;
+    const { publish } = req.query; //true false
+    const course = await Course.findById(courseId);
+    if (!course) {
+      return res
+        .status(404)
+        .send({ success: false, message: "Course Not Found" });
+    }
+    course.isPublished = publish === "true";
+    await course.save();
+
+    const statusMessage = course.isPublished ? "Published" : "Unpublished";
+    return res.status(201).send({ message: `Course is ${statusMessage}` });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      message: "Fail to change the status of course",
+      error,
+      success: false,
+    });
+  }
+};

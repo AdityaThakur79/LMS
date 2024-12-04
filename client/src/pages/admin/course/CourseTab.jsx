@@ -21,7 +21,7 @@ import {
 import { useNavigate, useParams } from 'react-router-dom';
 import RichTextEditor from '@/components/RichTextEditor.jsx';
 import { Loader2 } from 'lucide-react';
-import { useGetCourseByIdQuery, useUpdateCourseMutation } from '@/features/api/courseApi';
+import { useGetCourseByIdQuery, usePublishCourseMutation, useUpdateCourseMutation } from '@/features/api/courseApi';
 import { toast } from 'sonner';
 
 const CourseTab = () => {
@@ -30,7 +30,7 @@ const CourseTab = () => {
     const courseId = params.courseId;
 
     const navigate = useNavigate();
-    const isPublished = false;
+    const [publishCourse, { data: publishCourseData }] = usePublishCourseMutation()
 
     const [input, setInput] = useState({
         courseTitle: "",
@@ -45,6 +45,19 @@ const CourseTab = () => {
     const [previewThumbnail, setPreviewThumbnail] = useState("");
     const [updateCourse, data, isLoading, isSuccess, error] = useUpdateCourseMutation();
     const { data: courseByIdData, isLoading: courseByIdLoading } = useGetCourseByIdQuery(courseId)
+
+    //Publish Course Handler
+    const publishCourseHanlder = async (e) => {
+        try {
+            const response = await publishCourse({ courseId, query: e })
+            if (response.data) {
+                toast.success(response.data.message);
+            }
+        } catch (error) {
+            console.log(error);
+            toast.error("Fail to Change the Status of Course");
+        }
+    }
 
     //Fetching Course Information By Id
     useEffect(() => {
@@ -124,12 +137,14 @@ const CourseTab = () => {
                         Make changes to your courses here. Click save when you're done.
                     </CardDescription>
                 </div>
+
                 <div className="space-x-2">
-                    <Button variant="outline">
-                        {isPublished ? "Unpublish" : "Publish"}
+                    <Button disabled={courseByIdData?.course.lectures.length === 0} variant="outline" onClick={() => { publishCourseHanlder(courseByIdData?.course.isPublished ? "false" : "true") }}>
+                        {courseByIdData?.course.isPublished ? "Unpublish" : "Publish"}
                     </Button>
                     <Button>Remove Course</Button>
                 </div>
+
             </CardHeader>
             <CardContent>
                 <div className="space-y-4 mt-5">

@@ -85,6 +85,13 @@ export const courseApi = createApi({
       }),
       providesTags: ["Refetch_Creator_Course"],
     }),
+    publishCourse: builder.mutation({
+      query: ({ courseId, query }) => ({
+        url: `/${courseId}?publish=${query}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["Refetch_Creator_Course"],
+    }),
   }),
 });
 
@@ -98,4 +105,5 @@ export const {
   useUpdateLectureMutation,
   useRemoveLectureMutation,
   useGetLectureByIdQuery,
+  usePublishCourseMutation,
 } = courseApi;

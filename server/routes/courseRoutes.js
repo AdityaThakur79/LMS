@@ -7,6 +7,7 @@ import {
   getCreatorCourses,
   getLectureById,
   removeLecture,
+  togglePublishCourse,
   updateCourseController,
   updateLecture,
 } from "../controllers/courseController.js";
@@ -36,5 +37,6 @@ router.get("/:courseId/lecture", isAuthenticated, getCourseLectures);
 router.post("/:courseId/lecture/:lectureId", isAuthenticated, updateLecture);
 router.delete("/:courseId/lecture/:lectureId", isAuthenticated, removeLecture);
 router.get("/lecture/:lectureId", isAuthenticated, getLectureById);
+router.patch("/:courseId", isAuthenticated, togglePublishCourse);
 
 export default router;
