@@ -118,8 +118,19 @@ const Navbar = () => {
 export default Navbar
 
 const MobileNavbar = () => {
-    // const { user } = useSelector(store => store.auth)
-    const role = "instructor";
+    const { user } = useSelector(store => store.auth)
+    const [logoutUser, { data, isLoading, isSuccess }] = useLogoutUserMutation();
+    const navigate = useNavigate();
+
+    const logoutHandler = async () => {
+        await logoutUser();
+    }
+    useEffect(() => {
+        if (isSuccess) {
+            toast.success(data.message || "User Logged Out")
+            navigate("/login")
+        }
+    }, [isSuccess])
     return (
         <Sheet>
             <SheetTrigger asChild>
@@ -137,20 +148,39 @@ const MobileNavbar = () => {
                     <DarkMode />
                 </SheetHeader>
                 <Separator className="mr-2" />
-                <nav className="flex flex-col space-y-4">
-                    <span>My Learning</span>
-                    <span>Edit Profile</span>
-                    <p>Log out</p>
-                </nav>
-                {role === "instructor" && (
-                    <SheetFooter>
-                        <SheetClose asChild>
-                            <Button type="submit"
-                            // onClick={() => navigate("/admin/dashboard")}
-                            >Dashboard</Button>
-                        </SheetClose>
-                    </SheetFooter>
-                )}
+                {user ? (
+                    <div className='flex flex-col gap-2'>
+
+                        <Avatar>
+                            <AvatarImage src={user?.photoUrl} alt="@shadcn" />
+                            <AvatarFallback>CN</AvatarFallback>
+                        </Avatar>
+                        
+
+                        <Link to="mylearning">My Learning</Link>
+                        <DropdownMenuSeparator />
+                        <Link to="profile">Edit Profile</Link>
+                        <DropdownMenuSeparator />
+                        {
+                            user.role == "instructor" && (
+
+                                <Link to="/admin/dashboard">Dashboard</Link>
+
+                            )}
+                        <DropdownMenuSeparator />
+                        <div onClick={logoutHandler}  >
+                             
+                            <span><LogOut />Log out</span>
+                        </div>
+
+
+                    </div>) :
+                    <div className='flex gap-2 items-center'>
+                        <Link to="/login"><Button variant="outline">Login</Button></Link>
+                        <Link to="/login"> <Button>Signup</Button></Link>
+                    </div>
+                }
+
             </SheetContent>
         </Sheet>
     );
