@@ -14,7 +14,7 @@ import { BadgeInfo, Lock, PlayCircle } from "lucide-react";
 import ReactPlayer from "react-player";
 import { useNavigate, useParams } from "react-router-dom";
 import { useGetCourseDetailWithPurchaseQuery } from '@/features/api/purchaseApi';
-import { useSummarizeDescriptionQuery } from '@/features/api/courseApi';
+import { useSummarizeDescriptionMutation } from '@/features/api/courseApi';
 
 const CourseDetail = () => {
     const params = useParams();
@@ -37,10 +37,10 @@ const CourseDetail = () => {
     }
 
 
-    const { data: summarizedData, isLoading: summarizedLoading } = useSummarizeDescriptionMutation();
+    const [summarizeDescription, { data: summarizedData, isLoading: summarizedLoading }] = useSummarizeDescriptionMutation();
 
     const summarizeDescriptionHandler = () => {
-        useSummarizeDescriptionMutation(courseId)
+        summarizeDescription(courseId)
     }
     return (
         <div className="space-y-5 mt-20">
