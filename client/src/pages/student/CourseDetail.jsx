@@ -111,7 +111,7 @@ const CourseDetail = () => {
                         </CardFooter>
                     </Card>
                     <Button className="w-full" disabled={summarizedLoading} onClick={summarizeDescriptionHandler}>
-                        {summarizedLoading ? "Summarizing Course" : "Summarize Course"}
+                        Summarize Detail
                     </Button>
                     <Card>
                         <CardContent className="p-4">
