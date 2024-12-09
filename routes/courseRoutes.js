@@ -9,6 +9,7 @@ import {
   getLectureById,
   removeLecture,
   searchCourse,
+  summarizeCourseDescription,
   togglePublishCourse,
   updateCourseController,
   updateLecture,
@@ -41,5 +42,6 @@ router.post("/:courseId/lecture/:lectureId", isAuthenticated, updateLecture);
 router.delete("/:courseId/lecture/:lectureId", isAuthenticated, removeLecture);
 router.get("/lecture/:lectureId", isAuthenticated, getLectureById);
 router.patch("/:courseId", isAuthenticated, togglePublishCourse);
+router.post("/:courseId/summarize", summarizeCourseDescription);
 
 export default router;

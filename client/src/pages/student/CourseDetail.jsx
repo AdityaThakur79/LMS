@@ -14,6 +14,7 @@ import { BadgeInfo, Lock, PlayCircle } from "lucide-react";
 import ReactPlayer from "react-player";
 import { useNavigate, useParams } from "react-router-dom";
 import { useGetCourseDetailWithPurchaseQuery } from '@/features/api/purchaseApi';
+import { useSummarizeDescriptionQuery } from '@/features/api/courseApi';
 
 const CourseDetail = () => {
     const params = useParams();
@@ -35,6 +36,12 @@ const CourseDetail = () => {
         }
     }
 
+
+    const { data: summarizedData, isLoading: summarizedLoading } = useSummarizeDescriptionMutation();
+
+    const summarizeDescriptionHandler = () => {
+        useSummarizeDescriptionMutation(courseId)
+    }
     return (
         <div className="space-y-5 mt-20">
             <div className="bg-[#2D2F31] text-white">
@@ -103,9 +110,17 @@ const CourseDetail = () => {
                             )}
                         </CardFooter>
                     </Card>
+                    <Button className="w-full" disabled={summarizedLoading} onClick={summarizeDescriptionHandler}>
+                        {summarizedLoading ? "Summarizing Course" : "Summarize Course"}
+                    </Button>
+                    <Card>
+                        <CardContent className="p-4">
+                            <p>{summarizedData}</p>
+                        </CardContent>
+                    </Card>
                 </div>
             </div>
-        </div>
+        </div >
     )
 }
 

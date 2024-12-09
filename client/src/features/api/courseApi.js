@@ -119,6 +119,12 @@ export const courseApi = createApi({
       }),
       invalidatesTags: ["Refetch_Creator_Course"],
     }),
+    summarizeDescription: builder.mutation({
+      query: (courseId) => ({
+        url: `${courseId}/summarize`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -135,4 +141,5 @@ export const {
   useRemoveLectureMutation,
   useGetLectureByIdQuery,
   usePublishCourseMutation,
+  useSummarizeDescriptionMutation,
 } = courseApi;

@@ -6,6 +6,10 @@ import {
   uploadMedia,
 } from "../utils/cloudinary.js";
 
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import dotenv from "dotenv";
+dotenv.config();
+
 export const createCourseController = async (req, res) => {
   try {
     const { courseTitle, category } = req.body;
@@ -341,5 +345,26 @@ export const togglePublishCourse = async (req, res) => {
       error,
       success: false,
     });
+  }
+};
+
+export const summarizeCourseDescription = async (req, res) => {
+  try {
+    const { courseId } = req.params;
+    const course = await Course.findById(courseId);
+    const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const result = await model.generateContent(
+      `Summarize the following Description given in 3-4 lines ignoring the html tags: ${course?.description}`
+    );
+    const sumarizedText = result.response.text();
+    return res.status(200).send({
+      success: true,
+      sumarizedText,
+      message: "Text Summarized Successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ message: "Somewthing Went Wrong", error });
   }
 };
